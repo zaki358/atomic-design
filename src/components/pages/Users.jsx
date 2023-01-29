@@ -1,8 +1,9 @@
-import styled from "styled-components";
-import { useLocation } from "react-router-dom";
-
+import { useContext } from "react";
+import { UserContext } from "../../providers/UserProvider";
+import { SecondaryButton } from "../atoms/button/SecondaryButton";
 import { SearchInput } from "../molecules/SearchInput";
 import { UserCard } from "../organisms/user/UserCard";
+import styled from "styled-components";
 
 //.keysによって配列の中身がインデックス番号になる　ないと中身が何もない配列
 const users = [...Array(10).keys()].map((val) => {
@@ -20,16 +21,17 @@ const users = [...Array(10).keys()].map((val) => {
 });
 
 export const Users = () => {
-  const {state} = useLocation();
-  //stateがあるかないか（trueかfalseか）
-  const isAdmin = state ? state.isAdmin : false;
+  const { userInfo, setUserInfo } = useContext(UserContext);
+  const onClickSwitch = () => setUserInfo({ isAdmin: !userInfo.isAdmin });
   return (
     <SContainer>
       <h2>ユーザー一覧</h2>
       <SearchInput />
+      <br />
+      <SecondaryButton onClick={onClickSwitch}>切替</SecondaryButton>
       <SUserArea>
         {users.map((user) => (
-          <UserCard key={user.id} user={user} isAdmin={isAdmin}/>
+          <UserCard key={user.id} user={user} />
         ))}
       </SUserArea>
     </SContainer>
